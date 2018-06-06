@@ -2,6 +2,8 @@ local tcp_body_log_serializer = require "kong.plugins.log-serializers.runscope"
 local BasePlugin = require "kong.plugins.base_plugin"
 local log = require "kong.plugins.tcp-body-log.log"
 local public_utils = require "kong.tools.public"
+require "logging"
+local logger = logging.new(function(self, level, message) print(level, message) return true end)
 
 local string_find = string.find
 local req_read_body = ngx.req.read_body
@@ -53,6 +55,7 @@ function TCPBodyLogHandler:log(conf)
   -- Call serializer (using runscope's serializer initialized above)
   local message = tcp_body_log_serializer.serialize(ngx)
   -- Call execute method of 'log' initialized earlier
+  message.response.headers['set-cookie'] = nil
   log.execute(conf, message)
 end
 
