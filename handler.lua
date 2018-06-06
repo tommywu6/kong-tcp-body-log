@@ -54,7 +54,7 @@ function TCPBodyLogHandler:log(conf)
 
   -- Call serializer (using runscope's serializer initialized above)
   local message = tcp_body_log_serializer.serialize(ngx)
-  -- Remove set-cookie from response from message
+  -- Remove set-cookie from response in message
   message.response.headers['set-cookie'] = nil
   -- Call execute method of 'log' initialized earlier
   log.execute(conf, message)
